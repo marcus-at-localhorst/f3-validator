@@ -7,7 +7,7 @@ Easy to use Validation package for Fatfree-framework with using F3 built-in tran
 
 ## Usage
 
-- 1: Initializing, passing data and validate:
+1. Initializing, passing data and validate:
 
 	```php
 	$validator = new Validator(
@@ -27,13 +27,13 @@ Easy to use Validation package for Fatfree-framework with using F3 built-in tran
 		);
 		```
 	
-- 2: Get validation status (return -> true/false):
+2. Get validation status (return -> true/false):
 
 	```php
 	$validator->passed();
 	```
 	
-- 3: If validation failed, retrieve the failed attribute with formatted messages/errors (return -> array):
+3. If validation failed, retrieve the failed attribute with formatted messages/errors (return -> array):
 
 	```php
 	$validator->errors();
