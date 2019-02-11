@@ -5,31 +5,39 @@ Easy to use Validation package for Fatfree-framework with using F3 built-in tran
 **NOTE:** This package port some classes and ideas from [illuminate/validator](https://github.com/illuminate/validator).
 **NOTE:** SAMPLE DICT/LANG FILE IS INCLUDED AS `en.php.sample`, use this for reference.
 
-## Usage
+## Usage
 
 - 1: Initializing, passing data and validate:
 
-	`$validator = new Validator(
+	```php
+	$validator = new Validator(
 		array('name' => 'Anand Pilania', 'email' => 'abc@def.ge'),
 		array('name' => 'required|min:3|max:60', 'email' => 'required|unique:Models\User|email')
-	)->validate();`
+	)->validate();
+	```
 	
 	**NOTE:** You can also pass more data to the `validate` method.
 	
 	* Another method:
 		
-		`$validator = Validator::instance()->validate(
+		```php
+		$validator = Validator::instance()->validate(
 			array('name' => 'Anand Pilania', 'email' => 'abc@def.ge'),
 			array('name' => 'required|min:3|max:60', 'email' => 'required|unique:NAMESPACED_MODEL_CLASS_OR_CONFIG_MODEL.PARAM`|email')
-		);`
+		);
+		```
 	
 - 2: Get validation status (return -> true/false):
 
-	`$validator->passed();`
+	```php
+	$validator->passed();
+	```
 	
 - 3: If validation failed, retrieve the failed attribute with formatted messages/errors (return -> array):
 
-	`$validator->errors();`
+	```php
+	$validator->errors();
+	```
 		
 
 ## Setup
@@ -52,37 +60,42 @@ Easy to use Validation package for Fatfree-framework with using F3 built-in tran
 FOR EX: Validatin on `beforesave` trigger: (This example is used with [ikkez/f3-cortex](https://github.com/ikkez/f3-cortex))
 
 ### Model
-	`protected $validator;
-	 public function __construct() {
-	      parent::__construct();
-	      $saveHandler = function() {
-		 foreach($this->getFieldConfiguration() as $field => $conf) {
-            	    if(isset($conf['validate'])) {
-                	$rules[$field] = $conf['validate'];
-                	$data[$field] = $this->get($field);
-                	if(str_contains($conf['validate'], 'confirmed')) {
-            	    	   $confirmation = $field.'_confirmation';
-                    	   $data[$field.'_confirmation'] = null !== $f3->get('POST.'.$confirmation)?$f3->get('POST.'.$confirmation):$f3->get('GET.'.$confirmation);
-                	}
-            	    }
-        	}
-        	$this->validator = Validator::instance()->validate($data, $rules);
-		return $this->validator->passed();
-    	   };
-	   $this->beforesave($saveHandler);
-	}`
+
+```php
+protected $validator;
+ public function __construct() {
+      parent::__construct();
+      $saveHandler = function() {
+	 foreach($this->getFieldConfiguration() as $field => $conf) {
+	    if(isset($conf['validate'])) {
+		$rules[$field] = $conf['validate'];
+		$data[$field] = $this->get($field);
+		if(contains($conf['validate'], 'confirmed')) {
+		   $confirmation = $field.'_confirmation';
+		   $data[$field.'_confirmation'] = null !== $f3->get('POST.'.$confirmation)?$f3->get('POST.'.$confirmation):$f3->get('GET.'.$confirmation);
+		}
+	    }
+	}
+	$this->validator = Validator::instance()->validate($data, $rules);
+	return $this->validator->passed();
+   };
+   $this->beforesave($saveHandler);
+}
+```
 
 ### Controller
-	`$model = new MODEL;
-	 $model->copyFrom($f3->get('POST'), $model->fieldConf);
-	 $mode->save();
-	 
-	 if($model->validator->passed()) {
-	 	// NO ERRORS
-	 }else{
-	 	// VAIDATION FAILED
-		$errors = $model->validator->errors();
-	 }`
+```php
+$model = new MODEL;
+$model->copyFrom($f3->get('POST'), array_keys($model->getFieldConfiguration()));
+$mode->save();
+
+if($model->validator->passed()) {
+	// NO ERRORS
+}else{
+	// VAIDATION FAILED
+	$errors = $model->validator->errors();
+}
+```
 --
 http://about.me/anandpilania
 
